@@ -1,4 +1,4 @@
-from functions import prepare_data, get_bar_info, init_func
+from functions import prepare_data, get_bar_info, init_func, frame_generator, anim_func
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
@@ -8,8 +8,6 @@ from PIL import Image
 from matplotlib.colors import ListedColormap
 from matplotlib.animation import FuncAnimation
 import bar_chart_race as bcr
-
-df_images = pd.read_csv('/home/gabriel/Documentos/projects/bar_chart_race/data/df_images.csv')
 
 today_date = datetime.today().strftime("%Y-%m-%d")
 query = f"""
@@ -61,4 +59,19 @@ final_df_pivot.index = pd.to_datetime(final_df_pivot.index)
 df_values, df_ranks = prepare_data(final_df_pivot)
 fig, ax = plt.subplots(figsize=(16, 9))
 title = "Lucros e prejuízos apostando R$ 100,00 Brasileirão 2024"
-init_func(title, df_values, df_ranks, 20, fig)
+period_length = 2000
+steps_per_period = 10
+end_period_pause = 1000
+n_bars = 20
+filename = "teste.mp4"
+fps = 30
+writer = plt.rcParams['animation.writer']
+
+interval = period_length / steps_per_period
+pause = int(end_period_pause // interval)
+frames = frame_generator(len(df_values), pause, steps_per_period)
+
+
+anim = FuncAnimation(fig, anim_func, frames, init_func, interval=interval,
+                     fargs=(fig, title, df_values, df_ranks, n_bars))
+anim.save(filename, fps=fps, writer=writer) 

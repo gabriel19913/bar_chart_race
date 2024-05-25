@@ -119,24 +119,26 @@ def plot_bars(ax, title, df_values, df_ranks, n_bars, i):
     
     ax.text(710, 2, df_values.iloc[i,:].name.date().strftime("%d/%m/%Y"), fontsize=30, color='grey', ha='right',
             weight="bold", va='center', bbox=dict(facecolor='#ebebeb', edgecolor='none', pad=10.0))
-        # Plot the background image with extent 
-        # ax.imshow(img, aspect="auto", extent=ax.get_xlim() + ax.get_ylim())
-        
-        # if not fixed_max and bar_textposition == 'outside':
-        #     max_bar = bar_length.max()
-        #     new_max_pixels = ax.transData.transform((max_bar, 0))[0] + extra_pixels
-        #     new_xmax = ax.transData.inverted().transform((new_max_pixels, 0))[0]
-        #     ax.set_xlim(ax.get_xlim()[0], new_xmax)
-    # else:
-    #     bar_values = ax.bar(bar_location, bar_length, tick_label=cols,  color=colors)
-    #     ax.set_xticklabels(ax.get_xticklabels(), **tick_label_font)
-    #     if not fixed_max and bar_textposition == 'outside':
-    #         max_bar = bar_length.max()
-    #         new_max_pixels = ax.transData.transform((0, max_bar))[1] + extra_pixels
-    #         new_ymax = ax.transData.inverted().transform((0, new_max_pixels))[1]
-    #         ax.set_ylim(ax.get_ylim()[0], new_ymax)
 
 def init_func(title, df_values, df_ranks, n_bars, fig):
     ax = fig.axes[0]
     plot_bars(ax, title, df_values, df_ranks, n_bars, i=0)
-    plt.show()
+
+def frame_generator(n, pause, steps_per_period):
+    frames = []
+    for i in range(n):
+        frames.append(i)
+        if pause and i % steps_per_period == 0 and i != 0 and i != n - 1:
+            for _ in range(pause):
+                frames.append(None)
+    return frames
+
+def anim_func(i, fig, title, df_values, df_ranks, n_bars):
+    if i is None:
+        return
+    ax = fig.axes[0]
+    for bar in ax.containers:
+        bar.remove()
+    for text in ax.texts[0:]:
+        text.remove()
+    plot_bars(ax, title, df_values, df_ranks, n_bars, i)
