@@ -411,22 +411,6 @@ class _BarChartRace(CommonChart):
 
             text_objs = []
             for x1, y1 in zipped:
-                # xtext, ytext = ax.transLimits.transform((x1, y1))
-                # if self.orientation == 'h':
-                #     xtext += delta
-                #     val = x1
-                # else:
-                #     ytext += delta
-                #     val = y1
-
-                # if callable(self.bar_texttemplate):
-                #     text = self.bar_texttemplate(val)
-                # else:
-                #     text = self.bar_texttemplate.format(x=val)
-
-                # xtext, ytext = ax.transLimits.inverted().transform((xtext, ytext))
-
-                # text_obj = ax.text(xtext, ytext, text, clip_on=True, **self.bar_label_font)
                 text = self.bar_texttemplate.format(x=x1)
                 self.bar_label_font.pop('ha', None)
                 if x1 > 0:
